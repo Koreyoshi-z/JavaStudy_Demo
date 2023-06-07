@@ -4,7 +4,7 @@ public class Demo_1 {
         int count = 0;
         for (int year = 1900; year <= 2100; year++) {
             if (isLeapYear(year)) {
-                System.out.print(year + " ");
+                System.out.print(year + "\t");
                 count++;
                 //每行打印四个结果
                 if (count % 4 == 0) {
