@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Student {
+public class Student implements Comparable<Student>{
     private int id;
     private String name;
     private  int age;
@@ -77,5 +77,10 @@ public class Student {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, age);
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        return id - o.id;//升序排序
     }
 }
