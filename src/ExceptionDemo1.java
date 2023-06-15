@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 //输入一个数字，然后返回结果。
 //输入的不是数字时会报错
-public class ExceptionDemo {
+public class ExceptionDemo1 {
     public static void main(String[] args) {
         System.out.println("请输入一个数字：");
         Scanner sc = new Scanner(System.in);
