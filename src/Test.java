@@ -1,6 +1,4 @@
-//Map映射
-public class MapDemo {
+public class Test {
     public static void main(String[] args) {
-
     }
 }

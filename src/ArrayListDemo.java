@@ -12,14 +12,14 @@ public class ArrayListDemo {
         arrayList.add("李四");
         arrayList.add("王五");
         arrayList.set(2,"李妙真"); //用指定的元素替代此列表中指定位置上的元素
-        //使用迭代器去遍历
+        //使用迭代器去遍历  快捷键itit
         System.out.println("使用迭代器去遍历：");
         Iterator<String> it = arrayList.iterator();
         while (it.hasNext()){ //判断有没有下一个可迭代的元素
             String name = it.next(); //进来就取出来
             System.out.println(name);
         }
-        //使用增强for循环遍历
+        //使用增强for循环遍历  快捷键iter
         System.out.println("使用增强for循环遍历：");
         for (String name : arrayList) {
             System.out.println(name);
