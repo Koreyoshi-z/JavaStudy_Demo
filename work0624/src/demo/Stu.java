@@ -2,19 +2,17 @@ package demo;
 
 import java.util.Objects;
 
+//实体类：作为存储数据的模板类
 public class Stu {
     private int id;
     private String name;
     private int age;
     private double grade;
-    private String status;
+    private String status;//学生的状态（退学、在读）
 
+    //只需要ID就能构成一个学生对象
     public Stu(int id) {
         this.id = id;
-    }
-
-    public Stu(String name) {
-        this.name = name;
     }
 
     public Stu(int id, String name, int age, double grade, String status) {
@@ -81,12 +79,11 @@ public class Stu {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Stu stu = (Stu) o;
-        return id == stu.id && age == stu.age && Double.compare(stu.grade, grade) == 0 && Objects.equals(name, stu.name) && Objects.equals(status, stu.status);
+        return id == stu.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age, grade, status);
+        return Objects.hash(id);
     }
-
 }
