@@ -9,6 +9,8 @@ public class TreeSetDemo {
             @Override
             public int compare(String o1, String o2) {
                 //重写比较规则
+                //首先String的自然可比性比较特殊 是 先比较2个字符串有效位置上字符的顺序
+                //如果都有效位置上比出来的结果一样则比较长度
                 int result = Integer.compare(o1.length(),o2.length());
                 if (result == 0){
                     result = o1.compareTo(o2);
