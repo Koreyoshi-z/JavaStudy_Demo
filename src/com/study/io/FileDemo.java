@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+//文件流
 public class FileDemo {
     public static void main(String[] args) {
         //测试File类提供的一些方法
