@@ -54,10 +54,10 @@ public class JdbcUtil {
 
     }
 
-    //Connection:专门负责JDBC链接的对象
+    //Connection:专门负责JDBC连接的对象
     public static Connection getCon(){
         Connection connection = null;
-        //1.通过反射加载驱动地址:在虚拟机运行的过程中将数据库的驱动地址加载到内存中
+        //1.通过反射加载驱动地址: 在虚拟机运行的过程中将数据库的驱动地址加载到内存中
         try {
             Class.forName(DRIVER);
             //2.通过驱动管理者的对象去获取连接
@@ -69,7 +69,6 @@ public class JdbcUtil {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         return connection;
     }
 
