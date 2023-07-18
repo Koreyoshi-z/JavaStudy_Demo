@@ -1,16 +1,21 @@
 package com.wwz.study.service.impl;
 
+import com.wwz.study.dao.BalanceRecordsDao;
 import com.wwz.study.dao.UserDao;
+import com.wwz.study.dao.impl.BalanceRecordsDaoImpl;
 import com.wwz.study.dao.impl.UserDaoImpl;
+import com.wwz.study.entity.BalanceRecords;
 import com.wwz.study.entity.User;
 import com.wwz.study.service.UserService;
+import com.wwz.study.util.MyUtil;
 import com.wwz.study.view.UserMenu;
 
 //用户业务层接口的实现类
 public class UserServiceImpl implements UserService {
     //业务逻辑层调用数据访问层的接口引用(获取User表的操作权限)
     UserDao userDao = new UserDaoImpl();
-
+    //业务逻辑可以调用其他dao层的动作
+    BalanceRecordsDao balanceRecordsDao = new BalanceRecordsDaoImpl();
 
     //注册功能的业务逻辑
     @Override
@@ -86,7 +91,18 @@ public class UserServiceImpl implements UserService {
         }
         //调用dao层的充值方法
         userDao.updateBalanceById(id, rechargeAmount);
-        return 1;
+        BalanceRecords br = new BalanceRecords(0, id, MyUtil.getTime(), "充值", rechargeAmount);
+        //调用dao层的添加方法
+        balanceRecordsDao.add(br);
+        //账户的level是根据该账户的历史充值金额累加来计算的
+        int totalAmount = balanceRecordsDao.getTotalAmountByUserId(id, "充值");
+        //计算出充值完成后现在的应有level
+        int level = MyUtil.getLevel(totalAmount);
+        if (level != user.getLevel()){
+            userDao.updateLevelById(id, level);
+            return 2;//充值成功，并且level提升。
+        }
+        return 1;//充值成功，但level值不改变。
     }
 
 

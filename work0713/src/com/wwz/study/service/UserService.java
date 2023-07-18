@@ -12,4 +12,5 @@ public interface UserService {
     public int updatePasswordById(int id, String oldPassword, String newPassword);
     public int updateBalance(int id, int rechargeAmount);
 
+
 }

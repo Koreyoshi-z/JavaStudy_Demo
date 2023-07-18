@@ -9,5 +9,6 @@ public interface UserDao {
     public User selectById(int id);
     public void updatePasswordById(int id, String newPassword);
     public void updateBalanceById(int id, int rechargeAmount);
+    public void updateLevelById(int id, int newLevel);
 
 }

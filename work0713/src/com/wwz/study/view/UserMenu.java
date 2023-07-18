@@ -1,18 +1,25 @@
 package com.wwz.study.view;
 
+import com.wwz.study.dao.BalanceRecordsDao;
+import com.wwz.study.dao.impl.BalanceRecordsDaoImpl;
 import com.wwz.study.entity.User;
+import com.wwz.study.entity.UserAndBalanceRecordsInfo;
+import com.wwz.study.service.BalanceRecordsService;
 import com.wwz.study.service.UserService;
+import com.wwz.study.service.impl.BalanceRecordsServiceImpl;
 import com.wwz.study.service.impl.UserServiceImpl;
 import com.wwz.study.util.MyUtil;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 //用户界面菜单(包括注册、登录等功能)
 public class UserMenu {
     private Scanner scanner = new Scanner(System.in);
     private String choice;
-    private UserService userService = new UserServiceImpl();//获取业务逻辑操作权限
+    private UserService userService = new UserServiceImpl();//获取用户业务逻辑操作权限
     private int user_id;//记录当前登录账号的id
+    private BalanceRecordsService balanceRecordsService = new BalanceRecordsServiceImpl();//获取余额记录业务逻辑操作权限
 
     //用户主界面
     public void startMenu() throws InterruptedException {
@@ -113,6 +120,7 @@ public class UserMenu {
             System.out.println("1.查询个人账户信息");
             System.out.println("2.修改密码");
             System.out.println("3.充值");
+            System.out.println("4.充值记录");
             System.out.println("0.退出");
             choice = scanner.next();
             switch (choice){
@@ -124,6 +132,9 @@ public class UserMenu {
                     break;
                 case "3":
                     reCharge();
+                    break;
+                case "4":
+                    selectBalanceRecords();
                     break;
                 case "0":
                     return;
@@ -140,7 +151,6 @@ public class UserMenu {
         System.out.println("=====================当前账户信息=====================");
         System.out.println(user);//这里可以在User实体类中重写一下toString()方法
     }
-
 
 
     //修改密码
@@ -230,10 +240,12 @@ public class UserMenu {
     //充值功能
     public void reCharge() throws InterruptedException {
         int balance = userService.selectById(user_id).getBalance();//查询当前余额
-
         System.out.println("=====================充值界面=====================");
-        System.out.println("您账户的当前余额为: " + balance + "，请选择你要充值的金额:");
-        System.out.println("[1->10元\t2->30元\t3->50元\t4.其他金额(限额100元)]");
+        System.out.println("您账户的当前余额为: " + balance + ", 请选择你要充值的金额(输入选项编号):");
+        System.out.println("1 -> 10元");
+        System.out.println("2 -> 30元");
+        System.out.println("3 -> 50元");
+        System.out.println("4 -> 其他金额(限额100元)]");
         int rechargeAmount = 0;
         choice = scanner.next();
         switch (choice){
@@ -255,7 +267,7 @@ public class UserMenu {
                 }
                 break;
             default:
-                System.out.println("您输入的充值金额不合法！");
+                System.out.println("您输入的选项不合法！");
                 break;
         }
         //充值确认
@@ -264,15 +276,27 @@ public class UserMenu {
         System.out.println("确认充值？ 输入'y'继续充值，输入'n'取消充值...");
         String isOrNotRecgange = scanner.next();
         if (isOrNotRecgange.equals("y")){
-            int result = userService.updateBalance(user_id, rechargeAmount);
+            int result = userService.updateBalance(user_id, rechargeAmount);//返回充值结果
             if (result == -1){
                 System.out.println("该账号不存在！");//同上，这种情况不会发生，可以不写。
             }
             if (result == 1){
                 System.out.println("正在为您充值....");
                 Thread.sleep(2000);
-                System.out.println("充值成功！本次充值的金额为:"+ rechargeAmount +"，您的当前余额为: " + userService.selectById(user_id).getBalance());
+                System.out.println("充值成功！");
             }
+            if (result == 2){
+                System.out.println("正在为您充值....");
+                Thread.sleep(2000);
+                System.out.println("充值成功！");
+                Thread.sleep(1000);
+                System.out.println("您的等级已经提升！");
+            }
+            int currentBalance = userService.selectById(user_id).getBalance();
+            int currentLevel = userService.selectById(user_id).getLevel();
+            System.out.println("本次充值的金额为:"+ rechargeAmount);
+            System.out.println("您的当前余额为:" + currentBalance);
+            System.out.println("您的等级为:" + currentLevel);
         }
         if (isOrNotRecgange.equals("n")){
             System.out.println("正在为您取消充值...");
@@ -282,6 +306,17 @@ public class UserMenu {
     }
 
 
+    //查询充值记录
+    public void selectBalanceRecords(){
+        //传入自己的user_id即可获取到自己的所有充值记录
+        ArrayList<UserAndBalanceRecordsInfo> al = balanceRecordsService.selectBalanceRecordsByUserIdAndBalanceType(user_id);
+        if (al.isEmpty()){
+            System.out.println("当前账户没有任何充值记录");
+        }else {
+            String name = userService.selectById(user_id).getName();
+            MyUtil.showList(al, "账户" + name + "的充值记录:");
+        }
+    }
 
 
 

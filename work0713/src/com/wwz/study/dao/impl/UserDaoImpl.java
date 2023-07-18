@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 //用户数据访问层接口的实现类
 public class UserDaoImpl extends BaseDao implements UserDao {
-
     //根据用户的name进行查询，并获取该用户的所有信息
     @Override
     public User selectByName(String name) {
@@ -14,7 +13,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         sql = "SELECT id,name,password,balance,level FROM user WHERE name = ?";//编写sql语句
         getCon();//调用父类BaseDao的方法，获取数据库连接。
         try {
-            preparedStatement.setString(1,name);
+            preparedStatement.setString(1, name);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 int id = resultSet.getInt("id");
@@ -58,7 +57,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         getCon();
         User user = null;
         try {
-            preparedStatement.setInt(1,id);
+            preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 String name = resultSet.getString("name");
@@ -93,14 +92,15 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     }
 
 
-    //根据用户的id进行充值
+    //根据用户的id修改余额
+    //充值和消费的业务逻辑(传入的 rechargeAmount 值是正数就代表充值,负数则是消费)
     @Override
     public void updateBalanceById(int id, int rechargeAmount) {
         sql = "UPDATE user SET balance = balance + ? WHERE id = ?";
         getCon();
         try {
-            preparedStatement.setInt(1,rechargeAmount);
-            preparedStatement.setInt(2,id);
+            preparedStatement.setInt(1, rechargeAmount);
+            preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,9 +109,21 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         }
     }
 
-
-
-
+    //更新用户的level
+    @Override
+    public void updateLevelById(int id, int newLevel) {
+        sql = "UPDATE user SET level = ? WHERE id = ?";
+        getCon();
+        try {
+            preparedStatement.setInt(1, newLevel);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            closeAll();
+        }
+    }
 
 
 }

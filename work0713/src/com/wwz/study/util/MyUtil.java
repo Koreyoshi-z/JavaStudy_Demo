@@ -1,6 +1,8 @@
 package com.wwz.study.util;
 
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 //自己写的工具类
@@ -30,5 +32,39 @@ public class MyUtil {
         }
         return sb.toString();
     }
+
+
+    //生成系统日期时间的方法
+    public static String getTime(){
+        Date date = new Date();
+        //使用SimpleDateFormat日期格式类
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");//设置转换的格式
+        String time = simpleDateFormat.format(date);
+        return time;
+    }
+
+    //计算level的规则
+    public static int getLevel(int totalAmount){
+        if (totalAmount > 0 && totalAmount <=30){
+            return 1;
+        }
+        if (totalAmount > 30 && totalAmount <=100){
+            return 2;
+        }
+        if (totalAmount > 100 && totalAmount <=300){
+            return 3;
+        }
+        return 4;
+    }
+
+
+    //负责遍历输出集合的方法
+    public static <T> void showList(ArrayList<T> al, String msg){
+        System.out.println("=====================" + msg + "=====================");
+        for (T t : al) {
+            System.out.println(t);
+        }
+    }
+
 
 }
