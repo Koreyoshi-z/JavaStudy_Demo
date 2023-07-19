@@ -88,6 +88,65 @@ public class BalanceRecordsDaoImpl extends BaseDao implements BalanceRecordsDao 
     }
 
 
+    //根据类型查询所有用户的订单记录
+    @Override
+    public ArrayList<UserAndBalanceRecordsInfo> selectAllBalanceRecordsInfo(String record_type) {
+        ArrayList<UserAndBalanceRecordsInfo> al = new ArrayList<>();
+        sql = "SELECT balance_record.id,user.id,name,level,record_time,record_type,money " +
+                "FROM user INNER JOIN balance_record ON user.id = user_id";
+        getCon();
+        try {
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int balanceRecordId = resultSet.getInt("balance_record.id");
+                int userId = resultSet.getInt("user.id");
+                String userName = resultSet.getString("name");
+                int level = resultSet.getInt("level");
+                String recordTime = resultSet.getString("record_time");
+                String recordType = resultSet.getString("record_type");
+                int money = resultSet.getInt("money");
+                User user = new User(userId, userName, null, 0, level);
+                BalanceRecords balanceRecords = new BalanceRecords(balanceRecordId, userId, recordTime, recordType, money);
+                UserAndBalanceRecordsInfo userAndBalanceRecordsInfo = new UserAndBalanceRecordsInfo(user,balanceRecords);
+                al.add(userAndBalanceRecordsInfo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            closeAll();
+        }
+        return al;
+    }
+
+
+    //根据金额和订单类型进行排序
+    @Override
+    public ArrayList<String> selectOrderSortInfo(String type, int limit) {
+        ArrayList<String> al = new ArrayList<>();
+        sql = "SELECT user.id,name,SUM(money),level FROM user INNER JOIN balance_record ON user.id = user_id " +
+                "WHERE record_type = ? GROUP BY user_id ORDER BY SUM(money) DESC LIMIT ?";
+        getCon();
+        try {
+            preparedStatement.setString(1, type);
+            preparedStatement.setInt(2, limit);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int userId = resultSet.getInt("user.id");
+                String name = resultSet.getString("name");
+                int sumMoney = resultSet.getInt("SUM(money)");
+                int level = resultSet.getInt("level");
+                String str = "[" + "用户编号: " + userId + "\t账户: " + name + "\t充值金额: " +sumMoney + "\t等级: " + level +"]";
+                al.add(str);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return al;
+    }
+
+
+
+
 
 
 

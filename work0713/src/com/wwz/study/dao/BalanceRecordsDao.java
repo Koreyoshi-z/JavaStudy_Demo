@@ -9,4 +9,6 @@ public interface BalanceRecordsDao {
     public void add(BalanceRecords balanceRecords);
     public int getTotalAmountByUserId(int user_id,String record_type);
     public ArrayList<UserAndBalanceRecordsInfo> selectInfoByUserIdAndBalanceType(int user_id,String record_type);
+    public ArrayList<UserAndBalanceRecordsInfo> selectAllBalanceRecordsInfo(String record_type);
+    public ArrayList<String> selectOrderSortInfo(String type, int limit);
 }

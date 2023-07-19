@@ -60,7 +60,7 @@ public class User {
     @Override
     public String toString() {
         return "[" +
-                "id: " + id +
+                "用户编号: " + id +
                 ", 账户: " + name +
                 ", 密码: " + password +
                 ", 余额: " + balance +

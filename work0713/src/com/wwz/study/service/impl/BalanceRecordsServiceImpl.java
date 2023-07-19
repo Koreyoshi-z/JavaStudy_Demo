@@ -16,4 +16,16 @@ public class BalanceRecordsServiceImpl implements BalanceRecordsService {
         return balanceRecordsDao.selectInfoByUserIdAndBalanceType(userId, "充值");
     }
 
+    //查询所有用户的充值记录
+    @Override
+    public ArrayList<UserAndBalanceRecordsInfo> selectAllBalanceRecordsInfo() {
+        return balanceRecordsDao.selectAllBalanceRecordsInfo("充值");
+    }
+
+    //查询充值排行榜
+    @Override
+    public ArrayList<String> selectRechargeLeaderboard() {
+        return balanceRecordsDao.selectOrderSortInfo("充值",10);
+    }
+
 }

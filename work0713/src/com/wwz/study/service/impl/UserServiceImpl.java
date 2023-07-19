@@ -10,6 +10,8 @@ import com.wwz.study.service.UserService;
 import com.wwz.study.util.MyUtil;
 import com.wwz.study.view.UserMenu;
 
+import java.util.ArrayList;
+
 //用户业务层接口的实现类
 public class UserServiceImpl implements UserService {
     //业务逻辑层调用数据访问层的接口引用(获取User表的操作权限)
@@ -103,6 +105,13 @@ public class UserServiceImpl implements UserService {
             return 2;//充值成功，并且level提升。
         }
         return 1;//充值成功，但level值不改变。
+    }
+
+
+    //查看所有用户信息
+    @Override
+    public ArrayList<User> selectAllUserInfo() {
+        return userDao.selectAllUserInfo();
     }
 
 

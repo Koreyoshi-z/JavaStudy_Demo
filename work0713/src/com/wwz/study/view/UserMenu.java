@@ -1,7 +1,5 @@
 package com.wwz.study.view;
 
-import com.wwz.study.dao.BalanceRecordsDao;
-import com.wwz.study.dao.impl.BalanceRecordsDaoImpl;
 import com.wwz.study.entity.User;
 import com.wwz.study.entity.UserAndBalanceRecordsInfo;
 import com.wwz.study.service.BalanceRecordsService;
@@ -9,7 +7,6 @@ import com.wwz.study.service.UserService;
 import com.wwz.study.service.impl.BalanceRecordsServiceImpl;
 import com.wwz.study.service.impl.UserServiceImpl;
 import com.wwz.study.util.MyUtil;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -76,7 +73,7 @@ public class UserMenu {
 
     //登录功能
     public void loginMenu() throws InterruptedException {
-        int count = 0;//记录登录失败的次数 包括账户不存在和
+        int count = 0;//记录登录失败的次数
         while (true){
             System.out.println("======================登录界面======================");
             System.out.println("请输入账号:");
@@ -145,7 +142,7 @@ public class UserMenu {
     }
 
 
-    //查询个人账户信息
+    //1.查询个人账户信息
     public void selectPersonalAccountInformation(){
         User user = userService.selectById(user_id);
         System.out.println("=====================当前账户信息=====================");
@@ -153,7 +150,7 @@ public class UserMenu {
     }
 
 
-    //修改密码
+    //2.修改密码
     public void changePassword() throws InterruptedException {
         System.out.println("=====================修改密码界面=====================");
         System.out.println("身份信息验证中......");
@@ -237,7 +234,7 @@ public class UserMenu {
     }
 
 
-    //充值功能
+    //3.充值功能
     public void reCharge() throws InterruptedException {
         int balance = userService.selectById(user_id).getBalance();//查询当前余额
         System.out.println("=====================充值界面=====================");
@@ -306,7 +303,7 @@ public class UserMenu {
     }
 
 
-    //查询充值记录
+    //4.查询充值记录
     public void selectBalanceRecords(){
         //传入自己的user_id即可获取到自己的所有充值记录
         ArrayList<UserAndBalanceRecordsInfo> al = balanceRecordsService.selectBalanceRecordsByUserIdAndBalanceType(user_id);

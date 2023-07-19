@@ -2,7 +2,10 @@ package com.wwz.study.dao.impl;
 
 import com.wwz.study.dao.UserDao;
 import com.wwz.study.entity.User;
+
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 //用户数据访问层接口的实现类
 public class UserDaoImpl extends BaseDao implements UserDao {
@@ -123,6 +126,29 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         }finally {
             closeAll();
         }
+    }
+
+    //查看所有用户信息
+    @Override
+    public ArrayList<User> selectAllUserInfo() {
+        ArrayList<User> al = new ArrayList<>();
+        sql = "SELECT id,name,password,balance,level FROM user";
+        getCon();
+        try {
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt( "id");
+                String name = resultSet.getString("name");
+                String password = resultSet.getString("password");
+                int balance = resultSet.getInt("balance");
+                int level = resultSet.getInt("level");
+                User user = new User(id, name, password, balance, level);
+                al.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return al;
     }
 
 

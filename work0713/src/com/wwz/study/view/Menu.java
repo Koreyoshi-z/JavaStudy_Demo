@@ -7,8 +7,9 @@ public class Menu {
 private Scanner scanner = new Scanner(System.in);
 private String choice;
 private UserMenu userMenu = new UserMenu();
+private AdminMenu adminMenu = new AdminMenu();
 
-    //1.用户主菜单
+    //系统主菜单
     public void mainMenu() throws InterruptedException {
         while (true){
             System.out.println("======================图书馆里系统======================");
@@ -18,9 +19,10 @@ private UserMenu userMenu = new UserMenu();
             choice = scanner.next();
             switch (choice){
                 case "1":
+                    adminMenu.startMenu();//管理员主界面
                     break;
                 case "2":
-                    userMenu.startMenu();
+                    userMenu.startMenu();//用户主界面
                     break;
                 case "0":
                     return;//退出程序
