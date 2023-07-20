@@ -2,8 +2,6 @@ package com.wwz.study.dao.impl;
 
 import com.wwz.study.dao.UserDao;
 import com.wwz.study.entity.User;
-
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

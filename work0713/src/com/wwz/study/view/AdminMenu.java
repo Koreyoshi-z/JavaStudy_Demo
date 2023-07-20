@@ -3,8 +3,12 @@ package com.wwz.study.view;
 import com.wwz.study.entity.User;
 import com.wwz.study.entity.UserAndBalanceRecordsInfo;
 import com.wwz.study.service.BalanceRecordsService;
+import com.wwz.study.service.BookRecordsService;
+import com.wwz.study.service.BookService;
 import com.wwz.study.service.UserService;
 import com.wwz.study.service.impl.BalanceRecordsServiceImpl;
+import com.wwz.study.service.impl.BookRecordsServiceImpl;
+import com.wwz.study.service.impl.BookServiceImpl;
 import com.wwz.study.service.impl.UserServiceImpl;
 import com.wwz.study.util.MyUtil;
 
@@ -17,6 +21,8 @@ public class AdminMenu {
     private String choice;
     private UserService userService = new UserServiceImpl();
     private BalanceRecordsService balanceRecordsService = new BalanceRecordsServiceImpl();
+    private BookService bookService = new BookServiceImpl();
+    private BookRecordsService bookRecordsService = new BookRecordsServiceImpl();
 
     //管理员主界面
     public void startMenu(){
@@ -29,7 +35,7 @@ public class AdminMenu {
                 case "1":
                     loginMenu();
                     break;
-                case "2":
+                case "0":
                     return;
                 default:
                     break;
@@ -41,7 +47,7 @@ public class AdminMenu {
     //管理员登录
     public void loginMenu(){
         //ps：管理员账户是系统开发的时候就设计好的，肯定不能注册。
-        System.out.println("======================登录界面======================");
+        System.out.println("======================管理员登录界面======================");
         System.out.println("请输入账户名:");
         String name = scanner.next();
         System.out.println("请输入密码:");
@@ -73,6 +79,7 @@ public class AdminMenu {
             System.out.println("1.所有用户信息");
             System.out.println("2.所有用户的订单记录");
             System.out.println("3.充值排行榜");
+            System.out.println("4.图书管理");
             System.out.println("0.退出");
             choice = scanner.next();
             switch (choice){
@@ -84,6 +91,9 @@ public class AdminMenu {
                     break;
                 case "3":
                     rechargeLeaderboard();
+                    break;
+                case "4":
+                    adminBookManagerMenu();
                     break;
                 case "0":
                     return;
@@ -123,5 +133,45 @@ public class AdminMenu {
         }
     }
 
+    //4.管理员的图书管理菜单
+    public void adminBookManagerMenu(){
+        while (true) {
+            System.out.println("====================管理员图书管理界面====================");
+            System.out.println("1.查看图书借阅信息");
+            System.out.println("2.添加图书");
+            System.out.println("3.删除图书");
+            System.out.println("4.退出");
+            choice = scanner.next();
+            switch (choice){
+                case "1":
+                    selectBookBorrowInfo();
+                    break;
+                case "2":
+                    addBook();
+                    break;
+                case "3":
+                    removeBook();
+                    break;
+                case "0":
+                    return;
+                default:
+                    break;
+            }
+        }
+    }
+
+
+    //查看图书借阅信息
+    public void selectBookBorrowInfo(){
+
+    }
+    //添加图书
+    public void addBook(){
+
+    }
+    //删除图书
+    public void removeBook(){
+
+    }
 
 }

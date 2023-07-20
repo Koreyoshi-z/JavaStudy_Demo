@@ -61,10 +61,10 @@ public class User {
     public String toString() {
         return "[" +
                 "用户编号: " + id +
-                ", 账户: " + name +
-                ", 密码: " + password +
-                ", 余额: " + balance +
-                ", 等级: " + level +
+                "\t账户: " + name +
+                "\t密码: " + password +
+                "\t余额: " + balance +
+                "\t等级: " + level +
                 "]";
     }
 

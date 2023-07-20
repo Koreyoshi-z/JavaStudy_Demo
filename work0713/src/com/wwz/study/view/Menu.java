@@ -3,7 +3,7 @@ package com.wwz.study.view;
 import java.util.Scanner;
 
 //主菜单  管理者和用户
-public class Menu {
+public class Menu { 
 private Scanner scanner = new Scanner(System.in);
 private String choice;
 private UserMenu userMenu = new UserMenu();

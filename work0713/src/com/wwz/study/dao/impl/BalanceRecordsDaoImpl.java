@@ -4,8 +4,6 @@ import com.wwz.study.dao.BalanceRecordsDao;
 import com.wwz.study.entity.BalanceRecords;
 import com.wwz.study.entity.User;
 import com.wwz.study.entity.UserAndBalanceRecordsInfo;
-
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
