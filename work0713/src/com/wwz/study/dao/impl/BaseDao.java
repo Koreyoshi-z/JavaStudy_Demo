@@ -1,7 +1,6 @@
 package com.wwz.study.dao.impl;
 
 import com.wwz.study.util.JdbcUtil;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,4 +50,5 @@ public class BaseDao {
             }
         }
     }
+
 }

@@ -3,13 +3,14 @@ package com.wwz.study.view;
 import com.wwz.study.entity.Book;
 import com.wwz.study.entity.User;
 import com.wwz.study.entity.UserAndBalanceRecordsInfo;
+import com.wwz.study.entity.UserAndBookBorrowRecordsInfo;
 import com.wwz.study.service.BalanceRecordsService;
-import com.wwz.study.service.BookRecordsService;
 import com.wwz.study.service.BookService;
+import com.wwz.study.service.BorrowRecordsService;
 import com.wwz.study.service.UserService;
 import com.wwz.study.service.impl.BalanceRecordsServiceImpl;
-import com.wwz.study.service.impl.BookRecordsServiceImpl;
 import com.wwz.study.service.impl.BookServiceImpl;
+import com.wwz.study.service.impl.BorrowRecordsServiceImpl;
 import com.wwz.study.service.impl.UserServiceImpl;
 import com.wwz.study.util.MyUtil;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class UserMenu {
     private int user_id;//记录当前登录账号的id
     private BalanceRecordsService balanceRecordsService = new BalanceRecordsServiceImpl();//获取余额记录业务逻辑操作权限
     private BookService bookService = new BookServiceImpl();//获取图书业务逻辑操作权限
-    private BookRecordsService bookRecordsService = new BookRecordsServiceImpl();//获取图书借阅记录业务逻辑操作权限
+    private BorrowRecordsService borrowRecordsService = new BorrowRecordsServiceImpl();//获取图书借阅记录业务逻辑操作权限
 
 
     //用户主界面
@@ -59,7 +60,6 @@ public class UserMenu {
             System.out.println("请输入密码:");
             String password = scanner.next();
             User user = new User(0,name,password,0,0);//接收用户输入的信息
-
             //register()方法是Boolean类型，返回true则方法执行成功，返回false则失败。
             if (userService.register(user)){
                 System.out.println("注册成功");
@@ -89,8 +89,8 @@ public class UserMenu {
             System.out.println("请输入密码:");
             String password = scanner.next();
             User user = new User(0, name, password, 0, 0);
-            int result = userService.login(user);//返回登录的结果
 
+            int result = userService.login(user);//返回登录的结果
             if (userService.login(user) == 1){
                 System.out.println("登录成功，正在为您跳转到用户功能界面......");
                 user_id = userService.selectByName(name).getId();//保存登录成功后的当前账号的id
@@ -123,10 +123,10 @@ public class UserMenu {
         while (true){
             System.out.println("====================用户的个人功能界面====================");
             System.out.println("1.查询个人账户信息");
-            System.out.println("2.修改密码");
-            System.out.println("3.充值");
-            System.out.println("4.充值记录");
-            System.out.println("5.图书管理");
+            System.out.println("2.图书管理");
+            System.out.println("3.充值记录");
+            System.out.println("4.充值");
+            System.out.println("5.修改密码");
             System.out.println("0.退出");
             choice = scanner.next();
             switch (choice){
@@ -134,19 +134,19 @@ public class UserMenu {
                     selectPersonalAccountInformation();
                     break;
                 case "2":
-                    changePassword();
-                    break;
-                case "3":
-                    reCharge();
-                    break;
-                case "4":
-                    selectBalanceRecords();
-                    break;
-                case "5":
                     userBookManagerMenu();
                     break;
+                case "3":
+                    selectBalanceRecords();
+                    break;
+                case "4":
+                    reCharge();
+                    break;
+                case "5":
+                    changePassword();
+                    break;
                 case "0":
-                    return;
+                    startMenu();
                 default:
                     break;
             }
@@ -161,8 +161,7 @@ public class UserMenu {
         System.out.println(user);//这里可以在User实体类中重写一下toString()方法
     }
 
-
-    //2.修改密码
+    //5.修改密码
     public void changePassword() throws InterruptedException {
         System.out.println("=====================修改密码界面=====================");
         System.out.println("身份信息验证中......");
@@ -176,7 +175,8 @@ public class UserMenu {
         String verificationInfo = scanner.next();
         //将输入的code和生成随机验证码都转换化为小写，这样输入验证码是就不会区分大小写。
         if (verificationInfo.toLowerCase().equals(verificationCode.toLowerCase())){
-            System.out.println("身份信息验证成功！");
+            System.out.println("身份信息验证成功......");
+            Thread.sleep(1000);
             //这里写update密码的判断逻辑
             //1.判断旧密码是否输入正确  2.判断新密码是否和旧密码相同
             System.out.println("请输入您的旧密码:");
@@ -242,20 +242,22 @@ public class UserMenu {
         if (hasLetter) count++;
         if (hasDigit) count++;
         if (hasSymbol) count++;
+
         return count >= 2;
     }
 
 
-    //3.充值功能
+    //4.充值功能
     public void reCharge() throws InterruptedException {
         int balance = userService.selectById(user_id).getBalance();//查询当前余额
+
         System.out.println("=====================充值界面=====================");
         System.out.println("您账户的当前余额为: " + balance + ", 请选择你要充值的金额(输入选项编号):");
         System.out.println("1 -> 10元");
         System.out.println("2 -> 30元");
         System.out.println("3 -> 50元");
         System.out.println("4 -> 其他金额(限额100元)]");
-        int rechargeAmount = 0;
+        int rechargeAmount = 0;//初始化充值金额
         choice = scanner.next();
         switch (choice){
             case "1":
@@ -279,11 +281,13 @@ public class UserMenu {
                 System.out.println("您输入的选项不合法！");
                 break;
         }
+
         //充值确认
         //PS：这里我并没有做验证码，因为实际的游戏或软件的充值中，我几乎没有遇见过。
         //站在商家角度，人家巴不得你快点充值！最多就是提醒你是否确认充值！
         System.out.println("确认充值？ 输入'y'继续充值，输入'n'取消充值...");
         String isOrNotRecgange = scanner.next();
+
         if (isOrNotRecgange.equals("y")){
             int result = userService.updateBalance(user_id, rechargeAmount);//返回充值结果
             if (result == -1){
@@ -307,27 +311,29 @@ public class UserMenu {
             System.out.println("您的当前余额为:" + currentBalance);
             System.out.println("您的等级为:" + currentLevel);
         }
+
         if (isOrNotRecgange.equals("n")){
             System.out.println("正在为您取消充值...");
             Thread.sleep(1000);
             System.out.println("取消成功！");
         }
+
     }
 
 
-    //4.查询充值记录
+    //3.查询充值记录
     public void selectBalanceRecords(){
         //传入自己的user_id即可获取到自己的所有充值记录
         ArrayList<UserAndBalanceRecordsInfo> al = balanceRecordsService.selectBalanceRecordsByUserIdAndBalanceType(user_id);
         if (al.isEmpty()){
-            System.out.println("当前账户没有任何充值记录");
+            System.out.println("当前账户没有任何充值记录！");
         }else {
             String name = userService.selectById(user_id).getName();
             MyUtil.showList(al, "账户" + name + "的充值记录:");
         }
     }
 
-    //5.用户的图书管理菜单
+    //2.用户的图书管理菜单
     public void userBookManagerMenu(){
         while (true) {
             System.out.println("====================用户图书管理界面====================");
@@ -363,41 +369,61 @@ public class UserMenu {
     public void selectAllBook(){
         ArrayList<Book> al = bookService.selectAllBook();
         if (al.isEmpty()){
-            System.out.println("没有图书信息");
+            System.out.println("没有图书信息！");
         }else {
             MyUtil.showList(al,"所有图书信息");
         }
     }
 
 
-    //我的借阅记录
+    //查看我的借阅记录
     public void selectMyBorrowRecords(){
-        //需要使用BorrowRecords
+        //获取用户的id
+        ArrayList<UserAndBookBorrowRecordsInfo> al = borrowRecordsService.selectMyBorrowRecords(user_id);
+        if (al.isEmpty()){
+            System.out.println("您没有任何借阅记录！");//搞不懂？还差一步！ 已解决：bookService出错，借书是没有添加记录
+        }else {
+            MyUtil.showList(al,"我的借阅记录");
+        }
     }
 
 
     //借阅图书
-    public void borrowBook() throws NullPointerException{
-        System.out.println("请输入你要借阅的书籍名称:");
-        String name = scanner.next();//输入错误的书名会报NullPointerException，如何避免？？？
-        //获取当前书籍的bid
-        int current_bid = bookService.selectByName(name).getBid();
-        //调用借书方法
-        int result = bookService.borrowBook(current_bid);
+    public void borrowBook(){
+        System.out.println("请输入你要借阅的书籍编号:");//通过查看所有图书功能可以获取所有图书的编号
+        int borrow_bid = scanner.nextInt();//注意要输入一个int类型的数据，不然会报错。如何避免？？？
+        //调用借书方法并返回int类型结果
+        int result = bookService.borrowBook(borrow_bid,user_id);
         if (result == 1){
-            System.out.println("借阅成功");
+            System.out.println("借阅成功！");
         }
         if (result == -1){
-            System.out.println("该图书不可被借阅");
+            System.out.println("不存在该图书！");
         }
-
+        if (result == -2){
+            System.out.println("该图书已被借阅，不能重复被借阅！");
+        }
     }
 
 
     //归还图书
     public void returnBook(){
-
+        System.out.println("请输入你要归还的书籍编号:");
+        int return_bid = scanner.nextInt();
+        //调用还书方法并返回int类型结果
+        int result = bookService.returnBook(return_bid,user_id);
+        if (result == 1){
+            System.out.println("归还成功！");
+        }
+        if (result == -1){
+            System.out.println("不存在该图书！");
+        }
+        if (result == -2){
+            System.out.println("该图书不可归还！");
+        }
     }
+    //借阅和归还本质上逻辑是相同的，只是更改图书的状态不同。
+    //现在还有一个弊端: 谁都可以借阅和归还，即使人和书对不上号！！！ 已解决：添加一个参数user_id，传入用户编号(user_id)记录是哪个用户借阅和归还的哪本书(bid)
 
 
 }

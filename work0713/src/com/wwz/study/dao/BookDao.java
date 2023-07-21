@@ -9,5 +9,7 @@ public interface BookDao {
     public void borrowBook(int bid, String newStatus);
     public Book selectByBid(int bid);
     public Book selectByName(String name);
+    public void addBook(Book book);
+    public void removeBook(String name);
 
 }

@@ -34,9 +34,6 @@ CREATE TABLE borrow_record(
     id INT AUTO_INCREMENT,
     bid INT NOT NULL,-- 外键 书籍编号
     uid INT NOT NULL,-- 外键 用户编号
-    userName VARCHAR(20),
-    bookName VARCHAR(20),
-    price DOUBLE,
     borrow_time VARCHAR(20),
     return_time VARCHAR(20),
     PRIMARY KEY (id)

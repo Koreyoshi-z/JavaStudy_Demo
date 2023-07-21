@@ -29,6 +29,7 @@ public class BalanceRecordsDaoImpl extends BaseDao implements BalanceRecordsDao 
         }
     }
 
+
     //查询用户充值或消费的总金额
     @Override
     public int getTotalAmountByUserId(int user_id, String record_type) {
@@ -141,11 +142,6 @@ public class BalanceRecordsDaoImpl extends BaseDao implements BalanceRecordsDao 
         }
         return al;
     }
-
-
-
-
-
 
 
 }

@@ -1,7 +1,6 @@
 package com.wwz.study.dao;
 
 import com.wwz.study.entity.User;
-
 import java.util.ArrayList;
 
 //用户数据访问层接口

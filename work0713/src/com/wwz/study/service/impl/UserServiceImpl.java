@@ -9,7 +9,6 @@ import com.wwz.study.entity.User;
 import com.wwz.study.service.UserService;
 import com.wwz.study.util.MyUtil;
 import com.wwz.study.view.UserMenu;
-
 import java.util.ArrayList;
 
 //用户业务层接口的实现类
@@ -18,6 +17,7 @@ public class UserServiceImpl implements UserService {
     UserDao userDao = new UserDaoImpl();
     //业务逻辑可以调用其他dao层的动作
     BalanceRecordsDao balanceRecordsDao = new BalanceRecordsDaoImpl();
+
 
     //注册功能的业务逻辑
     @Override
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         if (!oldPassword.equals(user.getPassword())){
             return -2;//输入的旧密码不对
         }
-        if (!userMenu.isValidPassword(user.getPassword())){
+        if (!userMenu.isValidPassword(newPassword)){
             return -3;//新密码不符合要求
         }
         //调用dao层的修改密码方法

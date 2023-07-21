@@ -1,17 +1,18 @@
 package com.wwz.study.view;
 
+import com.wwz.study.entity.Book;
 import com.wwz.study.entity.User;
 import com.wwz.study.entity.UserAndBalanceRecordsInfo;
+import com.wwz.study.entity.UserAndBookBorrowRecordsInfo;
 import com.wwz.study.service.BalanceRecordsService;
-import com.wwz.study.service.BookRecordsService;
 import com.wwz.study.service.BookService;
+import com.wwz.study.service.BorrowRecordsService;
 import com.wwz.study.service.UserService;
 import com.wwz.study.service.impl.BalanceRecordsServiceImpl;
-import com.wwz.study.service.impl.BookRecordsServiceImpl;
 import com.wwz.study.service.impl.BookServiceImpl;
+import com.wwz.study.service.impl.BorrowRecordsServiceImpl;
 import com.wwz.study.service.impl.UserServiceImpl;
 import com.wwz.study.util.MyUtil;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,7 +23,7 @@ public class AdminMenu {
     private UserService userService = new UserServiceImpl();
     private BalanceRecordsService balanceRecordsService = new BalanceRecordsServiceImpl();
     private BookService bookService = new BookServiceImpl();
-    private BookRecordsService bookRecordsService = new BookRecordsServiceImpl();
+    private BorrowRecordsService borrowRecordsService = new BorrowRecordsServiceImpl();
 
     //管理员主界面
     public void startMenu(){
@@ -137,19 +138,23 @@ public class AdminMenu {
     public void adminBookManagerMenu(){
         while (true) {
             System.out.println("====================管理员图书管理界面====================");
-            System.out.println("1.查看图书借阅信息");
-            System.out.println("2.添加图书");
-            System.out.println("3.删除图书");
-            System.out.println("4.退出");
+            System.out.println("1.查看所有图书信息");
+            System.out.println("2.查看图书借阅信息");
+            System.out.println("3.添加图书");
+            System.out.println("4.删除图书");
+            System.out.println("0.退出");
             choice = scanner.next();
             switch (choice){
                 case "1":
-                    selectBookBorrowInfo();
+                    selectAllBookInfo();
                     break;
                 case "2":
-                    addBook();
+                    selectBookBorrowInfo();
                     break;
                 case "3":
+                    addBook();
+                    break;
+                case "4":
                     removeBook();
                     break;
                 case "0":
@@ -161,17 +166,61 @@ public class AdminMenu {
     }
 
 
-    //查看图书借阅信息
-    public void selectBookBorrowInfo(){
-
+    //查看所有图书信息
+    public void selectAllBookInfo(){
+        ArrayList<Book> al = bookService.selectAllBook();
+        if (al.isEmpty()){
+            System.out.println("没有图书信息！");
+        }else {
+            MyUtil.showList(al,"所有图书信息");
+        }
     }
+
+    //查看所有的图书借阅信息
+    public void selectBookBorrowInfo(){
+        ArrayList<UserAndBookBorrowRecordsInfo> al = borrowRecordsService.selectBookBorrowInfo();
+        if (al.isEmpty()){
+            System.out.println("没有任何图书借阅信息");
+        }else {
+            MyUtil.showList(al,"所有图书的借阅信息");
+        }
+    }
+
     //添加图书
     public void addBook(){
-
+        System.out.println("请输入书名:");
+        String name = scanner.next();
+        System.out.println("请输入作者名:");
+        String author = scanner.next();
+        System.out.println("请输入简要的描述:");
+        String des = scanner.next();
+        System.out.println("请输入价格:");
+        Double price = scanner.nextDouble();
+        //状态(status)默认是空闲,不需要输入
+        Book book = new Book(0, name, author, des, price, "空闲");
+        int result = bookService.addBook(book);
+        if (result == -1){
+            System.out.println("请输入正确的图书信息！");
+        }
+        if (result == -2){
+            System.out.println("该图书已经存在，不能在添加相同名字的书籍！");
+        }
+        if (result == 1){
+            System.out.println("添加成功！");
+        }
     }
+
     //删除图书
     public void removeBook(){
-
+        System.out.println("请输入您要删除的图书名:");
+        String name = scanner.next();
+        int result = bookService.removeBook(name);
+        if (result == -1){
+            System.out.println("不存在该图书，删除失败！");
+        }
+        if (result == 1){
+            System.out.println("删除成功！");
+        }
     }
 
 }
