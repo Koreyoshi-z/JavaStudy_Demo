@@ -10,7 +10,7 @@ public class Test {
         list.add("c");
         list.add("d");
         list.remove("a");
-        System.out.println(list);
+        System.out.println(list); 
         HashMap<String, Integer> map = new HashMap<>();
         map.put("a",1);
         System.out.println(map);
